@@ -1,28 +1,45 @@
 return {
-  'windwp/nvim-autopairs',
-  event = 'InsertEnter',
-  dependencies = {
-    'hrsh7th/nvim-cmp',
-  },
-  config = function()
-    local autopairs = require 'nvim-autopairs'
+  {
+    {
+      'windwp/nvim-ts-autotag',
+      config = function()
+        require('nvim-ts-autotag').setup {}
+      end,
+    },
+    {
+      'saghen/blink.pairs',
+      version = '*', -- (recommended) only required with prebuilt binaries
 
-    autopairs.setup {
-      check_ts = true, -- enable treesitter
-      ts_config = {
-        lua = { 'string' }, -- don't add pairs in lua string treesitter nodes
-        javascript = { 'template_string' }, -- don't add pairs in javscript template_string treesitter nodes
-        java = false, -- don't check treesitter on java
+      -- download prebuilt binaries from github releases
+      dependencies = 'saghen/blink.download',
+      -- OR build from source
+      build = 'cargo build --release',
+      -- OR build from source with nix
+      build = 'nix build .#build-plugin',
+
+      --- @module 'blink.pairs'
+      --- @type blink.pairs.Config
+      opts = {
+        mappings = {
+          -- you can call require("blink.pairs.mappings").enable() and require("blink.pairs.mappings").disable() to enable/disable mappings at runtime
+          enabled = true,
+          -- see the defaults: https://github.com/Saghen/blink.pairs/blob/main/lua/blink/pairs/config/mappings.lua#L10
+          pairs = {},
+        },
+        highlights = {
+          enabled = true,
+          groups = {
+            'BlinkPairsOrange',
+            'BlinkPairsPurple',
+            'BlinkPairsBlue',
+          },
+          matchparen = {
+            enabled = true,
+            group = 'MatchParen',
+          },
+        },
+        debug = false,
       },
-    }
-
-    -- import nvim-autopairs completion functionality
-    local cmp_autopairs = require 'nvim-autopairs.completion.cmp'
-
-    -- import nvim-cmp plugin (completions plugin)
-    local cmp = require 'cmp'
-
-    -- make autopairs and completion work together
-    cmp.event:on('confirm_done', cmp_autopairs.on_confirm_done())
-  end,
+    },
+  },
 }
