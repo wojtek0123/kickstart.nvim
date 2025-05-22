@@ -55,8 +55,8 @@ return {
             local renderer = require 'neo-tree.ui.renderer'
             renderer.focus_node(state, siblings[1]:get_id())
           end,
-          ['l'] = 'open',
-          ['h'] = 'close_node',
+          ['<Tab>'] = 'open',
+          ['<S-Tab>'] = 'close_node',
         },
       },
       filtered_items = {
